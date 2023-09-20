@@ -1,4 +1,6 @@
 <?php
+//body pr tk method concrete method tee sout kwint ma shi
+//variable ma ya constant value ya
 interface rulegame{
          public function gamescene();
         public function vegetables();
