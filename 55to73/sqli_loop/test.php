@@ -19,7 +19,8 @@ class index{
         //$this->db->insertMultipleShop($shops);
         //$this->db->updateShop(5,"capuccino");
         //$this->db->deleteShop(6);
-        $this->db->getJoinData(1);
+        //$this->db->getJoinData(1);
+        $this->db->fetchAllShops(1);
     }
 }
 new index;

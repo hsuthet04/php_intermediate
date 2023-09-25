@@ -34,13 +34,26 @@ class dbgen{
             echo "<hr>";
         }  
     }
+    public function fetchAllShops($state){
+        $stmt=$this->conn->prepare("SELECT * FROM shops WHERE state=?");
+        $stmt->bind_param('i',$state);
+        $stmt->execute();
+        $result=$stmt->get_result();
+        $data=$result->fetch_all();
+
+        echo "<pre>".print_r($data,true)."</pre>";
+        foreach($data as $item){
+            echo $item[1]."<br>";
+        }
+
+    }
     public function getAllData(){
         $result = $this->conn->query("SELECT * FROM shops");
         while($row = $result->fetch_object()){
             echo $row->name . "<br>";
         }
     }
-    
+ 
     public function insertSingleShop($name,$ipadd,$user,$pass,$state){
         $date=date("Y-m-d H:m:s");
         $stmt=$this->conn->prepare("INSERT INTO shops(name,ipadd,username,password,state,created_at)
@@ -74,12 +87,12 @@ class dbgen{
         echo $result;
     }
     public function getJoinData($state){
-        $stmt=$this->conn->prepare("
-        SELECT
+        $stmt=$this->conn->prepare(
+        "SELECT
             od.id as order_id,
             sh.name as shop_name,
             dh.name as dish_name,
-            od.price * od.amount as total,
+            (od.price * od.amount) as total,
             od.created_at as date
         FROM  
             orders as od
@@ -94,13 +107,14 @@ class dbgen{
         WHERE
             od.state=?
         ");
-        $stmt->bind_param('i',$state);
-        $result=$stmt->execute();
-        $stmt->bind_result($orderid,$shopname,$dishname,$total,$date);
 
+        $stmt->bind_param('i', $state);
+        $result = $stmt->execute();
+        $stmt->bind_result($orderid, $shopname, $dishname, $total, $date);
+    
         while($stmt->fetch()){
-            echo $orderid."<br>".$shopname."<br>".$dishname."<br>".$total."<br>".$date;
-            echo "<hr>";
-        }
+            echo $orderid ."<br>". $shopname."<br>".$dishname."<br>".$total."<br>".$date."<hr>";
+        
+    }
     }
 }
